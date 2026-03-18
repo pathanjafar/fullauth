@@ -1,65 +1,65 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginUser, getMe } from '../api/auth';
+import * as auth from '../api/auth';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
-    const [form, setForm]     = useState({ email: '', password: '' });
-    const [error, setError]   = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
-    const navigate  = useNavigate();
-
-    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
         try {
-            const res = await loginUser(form);
+            const res = await auth.login({ email, password });
             const token = res.data.token;
             localStorage.setItem('token', token);
-            const meRes = await getMe();
+            const meRes = await auth.getMe();
             login(token, meRes.data.data);
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || 'Something went wrong');
+            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="auth-wrapper">
+        <div className="auth-container">
+            <div className="bg-orb" />
             <div className="auth-card">
-                <div className="brand">
-                    <div className="brand-icon">🔐</div>
-                    <h1>Welcome Back</h1>
-                    <p>Sign in to your account</p>
+                <div className="auth-header">
+                    <div className="auth-brand">Pathan <span className="brand-accent">Jafar</span></div>
+                    <div className="auth-subtitle">Welcome back! Please sign in.</div>
                 </div>
 
                 {error && <div className="alert alert-error">⚠ {error}</div>}
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">Email Address</label>
-                        <input id="email" type="email" name="email" placeholder="you@example.com"
-                            value={form.email} onChange={handleChange} required />
+                        <label>Email Address</label>
+                        <input type="email" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input id="password" type="password" name="password" placeholder="••••••••"
-                            value={form.password} onChange={handleChange} required />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <label style={{ marginBottom: 0 }}>Password</label>
+                            <Link to="/forgot-password" style={{ fontSize: '0.75rem', fontWeight: 600, color: '#1D9E75', textDecoration: 'none' }}>Forgot?</Link>
+                        </div>
+                        <input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     </div>
-                    <button id="login-btn" type="submit" className="btn btn-primary" disabled={loading}>
-                        {loading && <span className="spinner" />}
+                    <button type="submit" className="btn" disabled={loading}>
+                        {loading && <div className="spinner" />}
                         {loading ? 'Signing in...' : 'Sign In'}
                     </button>
                 </form>
 
                 <div className="link-row">
-                    Don't have an account?<Link to="/register">Create one</Link>
+                    Don't have an account? <Link to="/register">Create one</Link>
                 </div>
             </div>
         </div>

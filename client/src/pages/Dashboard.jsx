@@ -15,56 +15,38 @@ export default function Dashboard() {
         : '—';
 
     return (
-        <div className="dashboard-wrapper">
-            <nav className="navbar">
-                <div className="navbar-brand">
-                    <div className="nav-logo">🔐</div>
-                    <span>FullAuth</span>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <nav className="dashboard-nav">
+                <div style={{ fontSize: '1.25rem', fontWeight: 800 }}>Pathan <span style={{ color: '#1D9E75' }}>Jafar</span></div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                    <a href="https://pathanjafar-61.vercel.app/" target="_blank" rel="noopener noreferrer" className="link" style={{ fontSize: '0.875rem' }}>Portfolio</a>
+                    <a href="/pathanjafar.pdf" target="_blank" className="link" style={{ fontSize: '0.875rem' }}>Resume PDF</a>
+                    <button className="link" onClick={handleLogout} style={{ fontSize: '0.875rem', color: '#ef4444' }}>Logout</button>
                 </div>
-                <button id="logout-btn" className="logout-btn" onClick={handleLogout}>Logout</button>
             </nav>
 
             <div className="dashboard-content">
-                <div className="welcome-banner">
-                    <div className="welcome-text">
-                        <h2>Welcome back, {user?.name} 👋</h2>
-                        <p>You're successfully authenticated. Here's your account overview.</p>
-                    </div>
-                    <span className={`badge ${user?.role === 'admin' ? 'badge-admin' : 'badge-user'}`}>
-                        {user?.role}
-                    </span>
+                <div style={{ marginBottom: '2.5rem' }}>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>Hi, {user?.name} 👋</h1>
+                    <p style={{ color: '#6b7280' }}>Welcome to your secure account dashboard.</p>
                 </div>
 
-                <div className="cards-grid">
-                    <div className="info-card">
-                        <div className="info-card-icon icon-indigo">👤</div>
-                        <div className="info-card-label">Full Name</div>
-                        <div className="info-card-value">{user?.name}</div>
+                <div className="stats-grid">
+                    <div className="stat-card">
+                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Email Address</div>
+                        <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>{user?.email}</div>
                     </div>
-                    <div className="info-card">
-                        <div className="info-card-icon icon-green">📧</div>
-                        <div className="info-card-label">Email Address</div>
-                        <div className="info-card-value">{user?.email}</div>
+                    <div className="stat-card">
+                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Account Role</div>
+                        <div style={{ fontSize: '1.125rem', fontWeight: 700, textTransform: 'capitalize' }}>{user?.role}</div>
                     </div>
-                    <div className="info-card">
-                        <div className="info-card-icon icon-purple">🛡️</div>
-                        <div className="info-card-label">Role</div>
-                        <div className="info-card-value" style={{ textTransform: 'capitalize' }}>{user?.role}</div>
+                    <div className="stat-card">
+                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Member Since</div>
+                        <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>{joinedDate}</div>
                     </div>
-                    <div className="info-card">
-                        <div className="info-card-icon icon-indigo">📅</div>
-                        <div className="info-card-label">Member Since</div>
-                        <div className="info-card-value">{joinedDate}</div>
-                    </div>
-                    <div className="info-card">
-                        <div className="info-card-icon icon-green">🔑</div>
-                        <div className="info-card-label">User ID</div>
-                        <div className="info-card-value" style={{ fontSize: '0.8rem' }}>{user?._id}</div>
-                    </div>
-                    <div className="info-card">
-                        <div className="info-card-icon icon-purple">✅</div>
-                        <div className="info-card-label">Account Status</div>
-                        <div className="info-card-value" style={{ color: '#6ee7b7' }}>Active</div>
+                    <div className="stat-card">
+                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Account Status</div>
+                        <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#1D9E75' }}>Verified ✅</div>
                     </div>
                 </div>
             </div>
