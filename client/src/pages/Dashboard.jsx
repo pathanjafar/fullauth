@@ -20,6 +20,7 @@ export default function Dashboard() {
                 <div style={{ fontSize: '1.25rem', fontWeight: 800 }}>Pathan <span style={{ color: '#1D9E75' }}>Jafar</span></div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                     <a href="https://pathanjafar-61.vercel.app/" target="_blank" rel="noopener noreferrer" className="link" style={{ fontSize: '0.875rem' }}>Portfolio</a>
+                    <a href="/expenses" className="link" style={{ fontSize: '0.875rem', color: '#1D9E75' }}>Expenses</a>
                     <a href="/pathanjafar.pdf" target="_blank" className="link" style={{ fontSize: '0.875rem' }}>Resume PDF</a>
                     <button className="link" onClick={handleLogout} style={{ fontSize: '0.875rem', color: '#ef4444' }}>Logout</button>
                 </div>

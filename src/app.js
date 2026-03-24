@@ -25,7 +25,10 @@ app.use(limiter);
 
 // Mount routes
 const auth = require('./routes/authRoutes');
+const expenses = require('./routes/expenseRoutes');
+
 app.use('/api/auth', auth);
+app.use('/api/expenses', expenses);
 
 // Default route
 app.get('/', (req, res) => {

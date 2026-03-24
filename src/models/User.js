@@ -31,6 +31,10 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    budget: {
+        type: Number,
+        default: 10000
+    },
     createdAt: {
         type: Date,
         default: Date.now
