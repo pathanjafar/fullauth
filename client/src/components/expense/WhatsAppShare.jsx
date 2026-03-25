@@ -52,7 +52,12 @@ export default function WhatsAppShare({ expenses, budget, startDate, endDate }) 
   }
 
   return (
-    <button type="button" className="btn btn-whatsapp" onClick={handleShare}>
+    <button 
+      type="button" 
+      className="btn-premium" 
+      onClick={handleShare}
+      style={{ border: '1px solid rgba(16, 185, 129, 0.2)', color: 'var(--primary)', background: 'rgba(16, 185, 129, 0.05)' }}
+    >
       💬 WhatsApp Summary
     </button>
   );

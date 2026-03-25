@@ -65,6 +65,8 @@ export default function SmsParse({ onAdd }) {
       <div className="form-group">
         <textarea
           placeholder="Paste your UPI / PhonePe / bank SMS here..."
+          className="input-elegant"
+          style={{ height: '120px', padding: '1rem', resize: 'none' }}
           value={text}
           onChange={e => { setText(e.target.value); setPreview(null); }}
         />
@@ -72,26 +74,33 @@ export default function SmsParse({ onAdd }) {
 
       <button
         type="button"
-        className="btn btn-secondary"
+        className="btn-premium"
+        style={{ width: '100%', marginTop: '1rem', border: '1px solid var(--primary-glow)', color: 'var(--primary)' }}
         onClick={handleParse}
         disabled={parsing}
       >
-        {parsing ? '⏳ Parsing...' : '🔍 AI Parse SMS'}
+        {parsing ? '⏳ Analyzing Patterns...' : '🔍 AI Parse Transaction'}
       </button>
 
       {preview && (
-        <div className="sms-preview">
-          <p><strong>{CATEGORIES[preview.category]?.emoji || '📦'} {preview.title}</strong></p>
-          <p>Amount: <strong>₹{Number(preview.amount).toFixed(2)}</strong></p>
-          <p>Category: <strong>{preview.category}</strong></p>
-          <p>Date: <strong>{preview.date}</strong></p>
+        <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '20px', border: '1px solid var(--border-active)' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Parsed Preview</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '1.5rem' }}>
+             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', border: '1px solid var(--border-glass)' }}>
+                {CATEGORIES[preview.category]?.emoji || '📦'}
+             </div>
+             <div>
+                <strong style={{ display: 'block', fontSize: '1rem', color: 'var(--text-main)' }}>{preview.title}</strong>
+                <span style={{ fontSize: '0.813rem', color: 'var(--text-muted)' }}>₹{Number(preview.amount).toFixed(2)} • {preview.category}</span>
+             </div>
+          </div>
           <button
             type="button"
-            className="btn btn-primary"
-            style={{ marginTop: 10 }}
+            className="btn-premium btn-primary-gradient"
+            style={{ height: '44px', width: '100%' }}
             onClick={handleAdd}
           >
-            ✅ Add This Expense
+            Confirm & Add
           </button>
         </div>
       )}

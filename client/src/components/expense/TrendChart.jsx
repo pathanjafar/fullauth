@@ -47,13 +47,15 @@ export default function TrendChart({ expenses }) {
           fill: true,
           label: 'Daily Spending',
           data: dailyTotals,
-          borderColor: '#1D9E75',
-          backgroundColor: 'rgba(29, 158, 117, 0.15)',
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
           tension: 0.4,
-          pointRadius: 2,
-          pointHoverRadius: 6,
-          pointBackgroundColor: '#1D9E75',
-          borderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 8,
+          pointBackgroundColor: '#10b981',
+          pointBorderColor: '#050505',
+          pointBorderWidth: 2,
+          borderWidth: 3,
         },
       ],
     };
@@ -69,13 +71,13 @@ export default function TrendChart({ expenses }) {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        titleColor: '#1a1a1a',
-        bodyColor: '#1a1a1a',
-        borderColor: 'rgba(0,0,0,0.1)',
+        backgroundColor: '#111',
+        titleColor: '#f8fafc',
+        bodyColor: '#f8fafc',
+        borderColor: 'rgba(255,255,255,0.1)',
         borderWidth: 1,
-        padding: 10,
-        cornerRadius: 8,
+        padding: 12,
+        cornerRadius: 12,
         displayColors: false,
         callbacks: {
           label: (context) => `₹${context.parsed.y.toLocaleString('en-IN')}`,
@@ -86,7 +88,8 @@ export default function TrendChart({ expenses }) {
       x: { 
         grid: { display: false }, 
         ticks: { 
-          font: { size: 9, family: 'Outfit' },
+          color: '#64748b',
+          font: { size: 10, family: 'Outfit', weight: '500' },
           maxRotation: 45,
           minRotation: 45,
           autoSkip: true,
@@ -95,9 +98,10 @@ export default function TrendChart({ expenses }) {
       },
       y: { 
         beginAtZero: true, 
-        grid: { color: 'rgba(0,0,0,0.03)' },
+        grid: { color: 'rgba(255,255,255,0.03)' },
         ticks: { 
-          font: { size: 10, family: 'Outfit' },
+          color: '#64748b',
+          font: { size: 10, family: 'Outfit', weight: '500' },
           callback: value => '₹' + value.toLocaleString('en-IN')
         }
       },

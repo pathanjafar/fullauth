@@ -49,63 +49,74 @@ export default function Dashboard() {
         : 'No Budget Set';
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <nav className="dashboard-nav">
-                <div style={{ fontSize: '1.25rem', fontWeight: 800 }}>Pathan <span style={{ color: '#1D9E75' }}>Jafar</span></div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                    <a href="https://pathanjafar-61.vercel.app/" target="_blank" rel="noopener noreferrer" className="link" style={{ fontSize: '0.875rem' }}>Portfolio</a>
-                    <a href="/expenses" className="link" style={{ fontSize: '0.875rem', color: '#1D9E75' }}>Expenses</a>
-                    <a href="/pathanjafar.pdf" target="_blank" className="link" style={{ fontSize: '0.875rem' }}>Resume PDF</a>
-                    <button className="link" onClick={handleLogout} style={{ fontSize: '0.875rem', color: '#ef4444' }}>Logout</button>
+        <div className="container-wide" style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingTop: '1rem' }}>
+            <nav className="dashboard-nav" style={{ background: 'transparent', border: 'none', padding: '1.5rem 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>Pathan <span className="text-gradient">Jafar</span></div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+                    <a href="https://pathanjafar-61.vercel.app/" target="_blank" rel="noopener noreferrer" className="link" style={{ fontSize: '0.938rem', fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'none' }}>Portfolio</a>
+                    <a href="/expenses" className="link" style={{ fontSize: '0.938rem', fontWeight: 600, color: 'var(--primary)', textDecoration: 'none' }}>Expenses</a>
+                    <button className="link" onClick={handleLogout} style={{ fontSize: '0.938rem', fontWeight: 600, color: '#f87171', background: 'none', border: 'none', cursor: 'pointer' }}>Logout</button>
                 </div>
             </nav>
 
-            <div className="dashboard-content">
-                <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <div style={{ padding: '2rem 0' }}>
+                <div style={{ marginBottom: '3.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
                     <div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>Hi, {user?.name} 👋</h1>
-                        <p style={{ color: '#6b7280' }}>Welcome to your secure account dashboard.</p>
+                        <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 800, marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>Hi, {user?.name} 👋</h1>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem' }}>Your financial data is encrypted and secure.</p>
                     </div>
                     <button 
                         onClick={() => navigate('/expenses')}
-                        className="btn" 
-                        style={{ width: 'auto', height: '44px', padding: '0 20px', fontSize: '0.875rem' }}
+                        className="btn-premium btn-primary-gradient" 
+                        style={{ height: '56px', padding: '0 28px' }}
                     >
-                        💸 Manage Expenses
+                        💸 AI Expense Tracker
                     </button>
                 </div>
 
-                <div className="stats-grid">
-                    <div className="stat-card">
-                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Email Address</div>
-                        <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>{user?.email}</div>
-                    </div>
-                    <div className="stat-card">
-                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Account Status</div>
-                        <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#1D9E75' }}>Verified ✅</div>
-                    </div>
-                    
-                    {/* Expense Tracker Highlights */}
-                    <div className="stat-card" style={{ borderLeft: '4px solid var(--primary)' }}>
-                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Monthly Spending</div>
-                        <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>
+                <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+                    <div className="card-premium">
+                        <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>MONTHLY SPENDING</div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-main)' }}>
                             {expenseData.loading ? '...' : `₹${expenseData.total.toLocaleString('en-IN')}`}
                         </div>
-                    </div>
-                    <div className="stat-card" style={{ borderLeft: '4px solid ' + (remainingBudget < 0 ? '#ef4444' : '#1D9E75') }}>
-                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Budget Status</div>
-                        <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>
-                            {expenseData.loading ? '...' : budgetStatus}
+                        <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                             <span style={{ fontSize: '0.875rem', fontWeight: 700, color: remainingBudget < 0 ? '#f87171' : 'var(--primary)', background: remainingBudget < 0 ? 'rgba(248, 113, 113, 0.1)' : 'rgba(16, 185, 129, 0.1)', padding: '4px 10px', borderRadius: '8px' }}>
+                                {expenseData.loading ? 'Calculating...' : budgetStatus}
+                             </span>
                         </div>
                     </div>
 
-                    <div className="stat-card">
-                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Account Role</div>
-                        <div style={{ fontSize: '1.125rem', fontWeight: 700, textTransform: 'capitalize' }}>{user?.role}</div>
+                    <div className="card-premium">
+                        <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>ACTIVE BUDGET</div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-main)' }}>₹{expenseData.budget.toLocaleString('en-IN')}</div>
+                        <p style={{ marginTop: '16px', fontSize: '0.938rem', color: 'var(--text-muted)' }}>
+                            Remaining Space: <span style={{ color: remainingBudget < 0 ? '#f87171' : 'var(--text-main)', fontWeight: 700 }}>₹{remainingBudget.toLocaleString('en-IN')}</span>
+                        </p>
                     </div>
-                    <div className="stat-card">
-                        <div style={{ color: '#6b7280', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Member Since</div>
-                        <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>{joinedDate}</div>
+
+                    <div className="card-premium">
+                        <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>SECURE ACCESS</div>
+                        <div style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '6px', wordBreak: 'break-all' }}>{user?.email}</div>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--text-dim)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ width: '8px', height: '8px', background: 'var(--primary)', borderRadius: '50%' }}></span>
+                            Tier: Professional · Active since {new Date(user?.createdAt).getFullYear()}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="card-premium" style={{ marginTop: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', borderStyle: 'dashed', flexWrap: 'wrap', gap: '1.5rem' }}>
+                    <div>
+                        <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: '4px' }}>Professional Portfolio</h3>
+                        <p style={{ color: 'var(--text-dim)', fontSize: '0.938rem' }}>View Pathan Jafar's full stack expertise and recent projects.</p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        <a href="/pathanjafar.pdf" target="_blank" className="btn-premium" style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }}>
+                            Resume PDF
+                        </a>
+                        <a href="https://pathanjafar-61.vercel.app/" target="_blank" rel="noopener noreferrer" className="btn-premium btn-primary-gradient">
+                            Visit Portfolio
+                        </a>
                     </div>
                 </div>
             </div>

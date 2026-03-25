@@ -42,29 +42,33 @@ export default function TransactionList({ expenses, onDelete }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-icon">📭</div>
-          <p>No transactions yet. Add one above!</p>
+        <div style={{ textAlign: 'center', padding: '3rem 1rem', opacity: 0.5 }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📭</div>
+          <p style={{ fontWeight: 600 }}>No transactions yet.</p>
         </div>
       ) : (
-        filtered.map(e => {
-          const meta = CATEGORIES[e.category] || CATEGORIES.Other;
-          return (
-            <div className="tx-item" key={e._id}>
-              <div className="tx-emoji">{meta.emoji}</div>
-              <div className="tx-info">
-                <strong>{e.title}</strong>
-                <span>{e.category} · {formatDate(e.date)}</span>
+        <div className="tx-list">
+          {filtered.map(e => {
+            const meta = CATEGORIES[e.category] || CATEGORIES.Other;
+            return (
+              <div className="tx-item-new" key={e._id}>
+                <div className="tx-icon">{meta.emoji}</div>
+                <div className="tx-body">
+                  <span className="tx-title">{e.title}</span>
+                  <span className="tx-meta">{e.category} • {formatDate(e.date)}</span>
+                </div>
+                <div className="tx-price">-₹{e.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                <button 
+                  className="btn-premium" 
+                  onClick={() => onDelete(e._id)}
+                  style={{ width: '32px', height: '32px', padding: 0, borderRadius: '8px', background: 'rgba(239, 68, 68, 0.1)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.2)', boxShadow: 'none' }}
+                >
+                  ✕
+                </button>
               </div>
-              <div className="tx-amount">
-                -₹{e.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-              </div>
-              <button className="btn btn-danger-sm" onClick={() => onDelete(e._id)}>
-                ✕
-              </button>
-            </div>
-          );
-        })
+            );
+          })}
+        </div>
       )}
     </>
   );

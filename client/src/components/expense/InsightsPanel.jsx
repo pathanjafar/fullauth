@@ -37,8 +37,8 @@ export default function InsightsPanel({ expenses, budget, onBudgetChange }) {
     datasets: [{
       data: catTotals.map(([, val]) => val),
       backgroundColor: catTotals.map(([cat]) => CATEGORIES[cat]?.color || '#94a3b8'),
-      borderColor: '#ffffff',
-      borderWidth: 2,
+      borderColor: '#050505',
+      borderWidth: 4,
     }],
   };
 
@@ -53,28 +53,34 @@ export default function InsightsPanel({ expenses, budget, onBudgetChange }) {
     <>
       {/* Budget */}
       <div className="budget-section">
-        <div className="form-group">
-          <label htmlFor="budgetInput">Monthly Budget (₹)</label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label htmlFor="budgetInput" style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '8px' }}>MONTHLY BUDGET LIMIT (₹)</label>
           <input
             id="budgetInput"
             type="number"
+            className="input-elegant"
             value={budget || ''}
             onChange={e => onBudgetChange(Number(e.target.value) || 0)}
-            placeholder="Set your budget"
+            placeholder="e.g. 50000"
           />
         </div>
-        <div className="budget-bar-outer">
+        <div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden', marginBottom: '12px' }}>
           <div
-            className={`budget-bar-inner ${barClass}`}
-            style={{ width: `${budgetPct}%` }}
+            style={{ 
+                height: '100%', 
+                width: `${budgetPct}%`, 
+                background: budgetPct >= 100 ? '#f87171' : budgetPct >= 80 ? '#fbbf24' : 'var(--primary)',
+                transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: `0 0 10px ${budgetPct >= 100 ? 'rgba(248, 113, 113, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`
+            }}
           />
         </div>
-        <div className="budget-meta">
-          <span>₹{monthSpent.toLocaleString('en-IN')} spent</span>
-          <span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.813rem', fontWeight: 600 }}>
+          <span style={{ color: 'var(--text-main)' }}>₹{monthSpent.toLocaleString('en-IN')} spent</span>
+          <span style={{ color: 'var(--text-muted)' }}>
             {budget > 0
               ? `${budgetPct.toFixed(0)}% of ₹${budget.toLocaleString('en-IN')}`
-              : 'No budget set'}
+              : 'Limit not set'}
           </span>
         </div>
       </div>
@@ -92,17 +98,16 @@ export default function InsightsPanel({ expenses, budget, onBudgetChange }) {
           const meta = CATEGORIES[cat] || CATEGORIES.Other;
           const pct = ((amount / totalAll) * 100).toFixed(1);
           return (
-            <div className="cat-row" key={cat}>
-              <div className="cat-emoji">{meta.emoji}</div>
-              <div className="cat-info">
-                <div className="cat-top">
-                  <span className="cat-name">{cat}</span>
-                  <span className="cat-amount">₹{amount.toLocaleString('en-IN')} · {pct}%</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }} key={cat}>
+              <div style={{ fontSize: '1.25rem' }}>{meta.emoji}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '4px' }}>
+                  <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{cat}</span>
+                  <span style={{ color: 'var(--text-muted)' }}>₹{amount.toLocaleString('en-IN')}</span>
                 </div>
-                <div className="cat-bar-bg">
+                <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
                   <div
-                    className="cat-bar-fill"
-                    style={{ width: `${pct}%`, background: meta.color }}
+                    style={{ width: `${pct}%`, height: '100%', background: meta.color }}
                   />
                 </div>
               </div>
@@ -113,9 +118,9 @@ export default function InsightsPanel({ expenses, budget, onBudgetChange }) {
 
       {/* AI Advice */}
       {hasApiKey() && (
-        <div style={{ marginTop: 24, padding: 16, background: 'var(--primary-50)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--primary-light)' }}>
-          <h4 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--primary)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
-            ✨ AI Financial Coach
+        <div style={{ marginTop: 32, padding: '1.5rem', background: 'rgba(16, 185, 129, 0.05)', borderRadius: '20px', border: '1px solid rgba(16, 185, 129, 0.1)' }}>
+          <h4 style={{ fontSize: '0.813rem', fontWeight: 800, color: 'var(--primary)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            ✨ AI FINANCIAL COACH
           </h4>
           <AdviceButton expenses={expenses} budget={budget} />
           <ForecastButton expenses={expenses} budget={budget} />
@@ -142,26 +147,26 @@ function ForecastButton({ expenses, budget }) {
   }
 
   return (
-    <div style={{ marginTop: 12, borderTop: '1px solid rgba(29, 158, 117, 0.1)', paddingTop: 12 }}>
+    <div style={{ marginTop: 16, borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: 16 }}>
       {forecast && (
-        <div style={{ marginBottom: 12 }}>
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: 2, fontWeight: 700, textTransform: 'uppercase' }}>Projected Month-End</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: (forecast.projectedTotal > budget && budget > 0) ? 'var(--error)' : 'var(--primary)', marginBottom: 4 }}>
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: 4, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>PROJECTED MONTH-END</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: (forecast.projectedTotal > budget && budget > 0) ? '#f87171' : 'var(--primary)', marginBottom: 8 }}>
             ₹{forecast.projectedTotal.toLocaleString('en-IN')}
           </div>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontStyle: 'italic', lineHeight: '1.4' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontStyle: 'italic', lineHeight: '1.5' }}>
             "{forecast.advice}"
           </p>
         </div>
       )}
       <button 
         type="button" 
-        className="btn btn-secondary" 
-        style={{ fontSize: '0.8rem', padding: '8px 12px', width: '100%', height: 'auto', background: 'white' }}
+        className="btn-premium" 
+        style={{ fontSize: '0.875rem', width: '100%', height: '48px', background: 'rgba(255,255,255,0.05)' }}
         onClick={handleGetForecast}
         disabled={loading}
       >
-        {loading ? '🔮 Calculating Projection...' : forecast ? '🔄 Refresh Forecast' : '🔮 Forecast Month End'}
+        {loading ? '🔮 Calculating...' : forecast ? '🔄 Refresh Predictor' : '🔮 Forecast Month End'}
       </button>
     </div>
   );
@@ -186,18 +191,18 @@ function AdviceButton({ expenses, budget }) {
   return (
     <>
       {advice ? (
-        <p style={{ fontSize: '0.88rem', color: 'var(--text)', fontStyle: 'italic', marginBottom: 12 }}>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: 16, lineHeight: '1.5' }}>
           "{advice}"
         </p>
       ) : null}
       <button 
         type="button" 
-        className="btn btn-secondary" 
-        style={{ fontSize: '0.8rem', padding: '8px 12px' }}
+        className="btn-premium btn-primary-gradient" 
+        style={{ fontSize: '0.875rem', height: '48px', width: '100%', color: '#000' }}
         onClick={handleGetAdvice}
         disabled={loading}
       >
-        {loading ? '⏳ Analyzing...' : advice ? '🔄 Get New Tip' : '💡 Get Spending Tip'}
+        {loading ? '⏳ Analyzing...' : advice ? '🔄 Get New Insight' : '💡 Get AI Spending Tip'}
       </button>
     </>
   );

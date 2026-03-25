@@ -126,91 +126,113 @@ export default function ExpenseTracker() {
     .reduce((s, e) => s + e.amount, 0);
 
   return (
-    <div className="expense-tracker-page">
+    <div className="container-wide" style={{ paddingBottom: '6rem' }}>
       {/* Header */}
-      <header className="app-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <button onClick={() => navigate('/dashboard')} className="btn btn-outline" style={{ width: 'auto' }}>← Back</button>
-            <h1>💸 <span>Expense</span> Tracker</h1>
+      <header className="app-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '2.5rem 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <button onClick={() => navigate('/dashboard')} className="btn-premium" style={{ height: '48px', width: '48px', padding: 0 }}>←</button>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontWeight: 800, letterSpacing: '-0.02em' }}>💸 <span className="text-gradient">Expense</span> Intelligence</h1>
         </div>
-        <div className="header-actions">
-           <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>AI Powered & PhonePe Sync</span>
+        <div className="header-actions" style={{ textAlign: 'right', display: 'none' /* Hidden on mobile if needed */ }}>
+           <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--primary)', letterSpacing: '0.1em' }}>AI ENGINE ACTIVE</div>
+           <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{user?.name}'s Workspace</div>
         </div>
       </header>
 
-      {/* Summary Card */}
-      <div className="summary-card card">
-        <h3>Current Month Total</h3>
-        <div className="total">
-          ₹{monthlyTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-        </div>
-      </div>
-
-      {/* Spending Trends */}
-      <div className="card" style={{ marginBottom: 24 }}>
-        <div className="section-title">📈 30-Day Spending Trend</div>
-        <TrendChart expenses={expenses} />
-      </div>
-
-      {/* Dashboard Grid */}
-      <div className="dashboard-grid">
-        {/* Left — Form + SMS */}
-        <div className="card">
-          <div className="section-title">➕ Add Transaction</div>
-          <ExpenseForm onAdd={addExpense} />
-          <SmsParse onAdd={addExpense} />
-        </div>
-
-        {/* Right — Insights & Reports */}
-        <div className="card">
-          <div className="section-title">📊 Insights</div>
-          <InsightsPanel
-            expenses={expenses}
-            budget={budget}
-            onBudgetChange={handleBudgetChange}
-          />
-
-          <div className="sms-section" style={{ marginTop: 24 }}>
-            <div className="section-title">📄 Report Generation</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
-              <div className="form-group">
-                <label>From</label>
-                <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>To</label>
-                <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
-              </div>
+      {/* Summary Banner */}
+      <section className="summary-banner">
+        <div className="content">
+            <p style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.2em' }}>Live Spending Analysis</p>
+            <h2 style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 800, lineHeight: 1 }}>₹{monthlyTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</h2>
+            <div style={{ marginTop: '2.5rem', display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
+                <div className="stat-card-mini">
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 700, marginBottom: '4px' }}>MONTHLY LIMIT</p>
+                    <p style={{ fontSize: '1.25rem', fontWeight: 800 }}>₹{budget.toLocaleString('en-IN')}</p>
+                </div>
+                <div className="stat-card-mini">
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 700, marginBottom: '4px' }}>DAILY VELOCITY</p>
+                    <p style={{ fontSize: '1.25rem', fontWeight: 800 }}>₹{(monthlyTotal / 30).toFixed(0)}</p>
+                </div>
+                <div className="stat-card-mini" style={{ borderLeft: `4px solid ${monthlyTotal > budget ? '#f87171' : 'var(--primary)'}` }}>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 700, marginBottom: '4px' }}>BUDGET HEALTH</p>
+                    <p style={{ fontSize: '1.25rem', fontWeight: 800, color: monthlyTotal > budget ? '#f87171' : 'var(--primary)' }}>{monthlyTotal > budget ? 'Warning' : 'Excellent'}</p>
+                </div>
             </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              <button type="button" className="btn btn-outline" onClick={handleDownloadPdf}>
-                📥 Download PDF
-              </button>
-              <WhatsAppShare 
-                expenses={expenses} 
-                budget={budget} 
-                startDate={startDate} 
-                endDate={endDate} 
-              />
-            </div>
-            
-            <button 
-              type="button" 
-              className="btn btn-secondary" 
-              style={{ marginTop: 10, fontSize: '0.8rem' }} 
-              onClick={exportCSV}
-            >
-              📊 Export CSV (Selected Range)
-            </button>
-          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Transaction History */}
-      <div className="card" style={{ marginTop: 24 }}>
-        <TransactionList expenses={expenses} onDelete={deleteExpense} />
-      </div>
+      {/* Main Dashboard Layout */}
+      <main className="dashboard-layout">
+        {/* Left Column — History & Trends */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <div className="card-premium">
+                <div className="section-title"><span>📈</span> 30-Day Spending Trend</div>
+                <TrendChart expenses={expenses} />
+            </div>
+
+            <div className="card-premium">
+                <TransactionList expenses={expenses} onDelete={deleteExpense} />
+            </div>
+        </div>
+
+        {/* Right Column — Insights & Actions */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <div className="card-premium">
+                <div className="section-title"><span>📊</span> Financial Insights</div>
+                <InsightsPanel
+                    expenses={expenses}
+                    budget={budget}
+                    onBudgetChange={handleBudgetChange}
+                />
+            </div>
+
+            <div className="card-premium">
+                <div className="section-title"><span>➕</span> Add Transaction</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <ExpenseForm onAdd={addExpense} />
+                    <div style={{ height: '1px', background: 'rgba(0,0,0,0.05)' }}></div>
+                    <SmsParse onAdd={addExpense} />
+                </div>
+            </div>
+
+            <div className="card-premium">
+                <div className="section-title"><span>📄</span> Export Reports</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <div>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 700, display: 'block', marginBottom: '4px' }}>From</label>
+                            <input type="date" className="input-elegant" value={startDate} onChange={e => setStartDate(e.target.value)} />
+                        </div>
+                        <div>
+                            <label style={{ fontSize: '0.75rem', fontWeight: 700, display: 'block', marginBottom: '4px' }}>To</label>
+                            <input type="date" className="input-elegant" value={endDate} onChange={e => setEndDate(e.target.value)} />
+                        </div>
+                    </div>
+                    
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                        <button type="button" className="btn-premium" onClick={handleDownloadPdf} style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid var(--border-glass)' }}>
+                            PDF Document
+                        </button>
+                        <WhatsAppShare 
+                            expenses={expenses} 
+                            budget={budget} 
+                            startDate={startDate} 
+                            endDate={endDate} 
+                        />
+                    </div>
+                    
+                    <button 
+                        type="button" 
+                        className="btn-premium" 
+                        style={{ fontSize: '0.875rem', width: '100%', background: 'transparent', border: '1px solid rgba(255,255,255,0.05)', height: '44px' }}
+                        onClick={exportCSV}
+                    >
+                        Export CSV Spreadsheet
+                    </button>
+                </div>
+            </div>
+        </div>
+      </main>
     </div>
   );
 }
