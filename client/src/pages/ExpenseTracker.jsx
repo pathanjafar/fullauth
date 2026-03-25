@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { API } from '../api/auth';
 import ExpenseForm from '../components/expense/ExpenseForm';
 import SmsParse from '../components/expense/SmsParse';
 import InsightsPanel from '../components/expense/InsightsPanel';
@@ -42,7 +42,7 @@ export default function ExpenseTracker() {
 
   async function fetchExpenses() {
     try {
-      const res = await axios.get('/api/expenses', config);
+      const res = await API.get('/expenses');
       setExpenses(res.data.data);
       setBudget(res.data.budget);
       setLoading(false);
@@ -55,7 +55,7 @@ export default function ExpenseTracker() {
   // Handlers
   async function addExpense(expense) {
     try {
-      const res = await axios.post('/api/expenses', expense, config);
+      const res = await API.post('/expenses', expense);
       setExpenses(prev => [res.data.data, ...prev]);
       showToast('Expense added');
     } catch (err) {
@@ -65,7 +65,7 @@ export default function ExpenseTracker() {
 
   async function deleteExpense(id) {
     try {
-      await axios.delete(`/api/expenses/${id}`, config);
+      await API.delete(`/expenses/${id}`);
       setExpenses(prev => prev.filter(e => e._id !== id));
       showToast('Deleted', 'info');
     } catch (err) {
@@ -75,7 +75,7 @@ export default function ExpenseTracker() {
 
   async function handleBudgetChange(newBudget) {
     try {
-      const res = await axios.put('/api/expenses/budget', { budget: newBudget }, config);
+      const res = await API.put('/expenses/budget', { budget: newBudget });
       setBudget(res.data.budget);
       showToast('Budget updated');
     } catch (err) {
