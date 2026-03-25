@@ -1,93 +1,70 @@
-# FullAuth: Modern Authentication System
+# 💎 FullAuth + AI Expense Intelligence
 
-A comprehensive, full-stack authentication system built with Node.js, Express, React (Vite), and MongoDB.  This project features a secure, OTP-based email verification flow and a modern glassmorphic UI.
+A sophisticated, full-stack financial management ecosystem and authentication platform. This project combines a robust, secure authentication system with an AI-powered expense tracker, all wrapped in a **Dark Premium Obsidian** design system.
 
-## 🚀 Key Features
+![UI Preview](https://via.placeholder.com/800x400?text=FullAuth+AI+Expense+Tracker+Premium+UI)
 
-### Backend (Node.js/Express/MongoDB)
-- **Email OTP Authentication**: Secure sign-up and sign-in using email-based one-time passwords via Nodemailer.
-- **JWT-based Authentication**: Secure user sessions and protected routes.
-- **Password Management**: Robust password hashing (bcryptjs) and forgot/reset password flows.
-- **Security Enhancements**: 
-  - `helmet` (HTTP headers security)
-  - `express-mongo-sanitize` (NoSQL injection protection)
-  - `express-rate-limit` (Brute-force protection)
-  - `xss-clean` (Cross-site scripting protection)
-- **Database Architecture**: Structured MongoDB models for Users and OTP storage.
+## 🚀 Key Modules
 
-### Frontend (React/Vite)
-- **Modern UI**: Clean, premium white glassmorphic design theme.
-- **Responsive Design**: Mobile-first approach for accessibility across devices.
-- **Dynamic Routing**: Managed with `react-router-dom` for seamless state transitions.
-- **Interactive Pages**: Redesigned login, sign-up, forgot password, and dashboard pages.
-- **Protected Routes**: Ensuring secure access to user-specific content.
+### 🔐 1. Universal Authentication (FullAuth)
+- **Email OTP Verification**: High-deliverability sign-up and login flow powered by the **Resend API**.
+- **JWT Protection**: Secure, stateless user sessions with cross-origin protection.
+- **Password Security**: Multi-round `bcrypt` hashing and comprehensive account recovery flows.
+- **Production Guardrails**: Rate-limiting, XSS protection, and NoSQL injection sanitization.
+
+### 🧠 2. AI Expense Intelligence
+- **Gemini Pro Integration**: Real-time spending analysis and automated categorization.
+- **Smart SMS Parser**: Direct UPI/PhonePe SMS text-to-transaction conversion using AI.
+- **Financial Coaching**: Generative AI advice on budget health and spending trends.
+- **Dynamic Visuals**: High-contrast Chart.js trends with premium obsidian tooltips.
+
+### 🍱 3. Design System (Dark Premium)
+- **Obsidian Aesthetic**: Deep `#050505` backgrounds with neon emerald (`#10b981`) accents.
+- **Glassmorphism**: 32px backdrop-blur cards with high-contrast subtle borders.
+- **Mesh Gradients**: Multi-layered, animated radial backgrounds for a "smooth" interactive feel.
+- **Fully Responsive**: Optimized for high-end desktop displays and mobile financial tracking.
 
 ## 🛠 Tech Stack
 
-- **Frontend**: React, Vite, Lucide React, Axios.
-- **Backend**: Node.js, Express, Mongoose (MongoDB).
-- **Communication**: Nodemailer (Email delivery).
-- **Security**: JWT, bcryptjs, Helmet, Rate-limiting.
+- **Frontend**: React (Vite), Axios, Chart.js, Lucide Icons.
+- **Backend**: Node.js, Express, MongoDB Atlas (Mongoose).
+- **AI Engine**: Google Gemini API.
+- **Email Service**: Resend API.
+- **Deployment**: Vercel (Frontend), Render (Backend).
 
-## ⚙️ Installation & Setup
+## ⚙️ Quick Start
 
-1. **Clone the repository**:
+1. **Clone & Install**:
    ```bash
    git clone https://github.com/pathanjafar/fullauth.git
    cd fullauth
+   npm install
+   cd client && npm install
    ```
 
-2. **Backend Setup**:
-   - Create a `.env` file in the root directory and configure the following variables:
-     ```env
-     PORT=5000
-     MONGO_URI=your_mongodb_uri
-     JWT_SECRET=your_jwt_secret
-     EMAIL_USER=your_email_address
-     EMAIL_PASS=your_email_app_password
-     ```
-   - Install backend dependencies:
-     ```bash
-     npm install
-     ```
-   - Start the backend server:
-     ```bash
-     npm start
-     ```
+2. **Environment Configuration**:
+   Create a `.env` file in the root and `/client` directories with your respective API keys (MongoDB, Gemini, Resend, JWT_SECRET).
 
-3. **Frontend Setup**:
-   - Navigate to the `client` folder:
-     ```bash
-     cd client
-     ```
-   - Install frontend dependencies:
-     ```bash
-     npm install
-     ```
-   - Start the Vite development server:
-     ```bash
-     npm run dev
-     ```
+3. **Run Dev Mode**:
+   - Backend: `npm start` (from root)
+   - Frontend: `npm run dev` (from /client)
 
-## 🏗 Project Structure
+## 🏗 Project Architecture
 
 ```text
 fullauth/
-├── client/              # React frontend (Vite)
+├── client/              # React (Vite) Frontend
 │   ├── src/
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Login, Signup, Dashboard, ResetPassword, etc.
-│   │   ├── App.jsx      # Main application entry
-│   │   └── index.css    # Modern glassmorphic styles
-├── src/                # Express backend
-│   ├── models/          # User and OTP MongoDB models
-│   ├── routes/          # API route definitions
-│   ├── controllers/     # Authentication & OTP logic
-│   ├── utils/           # Email & helper utilities
-│   └── server.js        # Main server entry point
-└── README.md
+│   │   ├── components/  # AI & Expense specialized modules
+│   │   ├── pages/       # Dashboard, ExpenseTracker, Auth flows
+│   │   └── index.css    # Premium Obsidian Design System
+├── src/                # Express Backend
+│   ├── models/          # User, Expense, and OTP Mongo Schemas
+│   ├── routes/          # Unified API endpoints
+│   ├── utils/           # AI Parsers & Email Utilities
+│   └── app.js           # Express configuration
+└── package.json         # Full-stack dependency management
 ```
 
 ## 📜 License
-
-This project is licensed under the [ISC](LICENSE) license.
+Licensed under the [ISC](LICENSE) license. Built with ❤️ for modern financial tracking.
