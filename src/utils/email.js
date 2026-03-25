@@ -1,5 +1,9 @@
 const nodemailer = require('nodemailer');
 
+// Resend API Configuration
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const RESEND_ENDPOINT = 'https://api.resend.com/emails';
+
 let transporter = null;
 
 async function initTransporter() {
@@ -53,6 +57,34 @@ initTransporter();
  * Send a generic email
  */
 async function sendEmail({ to, subject, html }) {
+    // 1. Try Resend API First (Bypasses SMTP Blocks)
+    if (RESEND_API_KEY) {
+        try {
+            const response = await fetch(RESEND_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${RESEND_API_KEY}`,
+                },
+                body: JSON.stringify({
+                    from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+                    to,
+                    subject,
+                    html,
+                }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log('📧 Email sent via Resend API ✅');
+                return data;
+            }
+            console.warn('⚠️ Resend API failed, falling back to SMTP:', data.message);
+        } catch (err) {
+            console.error('⚠️ Resend API Error:', err.message);
+        }
+    }
+
+    // 2. Fallback to Nodemailer/SMTP
     if (!transporter) {
         console.warn('⚠️  Email transporter not ready');
         return;
