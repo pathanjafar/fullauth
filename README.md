@@ -2,7 +2,7 @@
 
 A sophisticated, full-stack financial management ecosystem and authentication platform. This project combines a robust, secure authentication system with an AI-powered expense tracker, all wrapped in a **Dark Premium Obsidian** design system.
 
-![UI Preview](https://via.placeholder.com/800x400?text=FullAuth+AI+Expense+Tracker+Premium+UI)
+![UI Preview](https://fullauth-six.vercel.app/)
 
 ## 🚀 Key Modules
 
