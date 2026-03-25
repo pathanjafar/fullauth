@@ -9,6 +9,7 @@ import { useToast } from '../context/ToastContext';
 import { useAuth } from '../context/AuthContext';
 import { generatePdfReport } from '../utils/expense/pdfGenerator';
 import { useNavigate } from 'react-router-dom';
+import TrendChart from '../components/expense/TrendChart';
 
 export default function ExpenseTracker() {
   const showToast = useToast();
@@ -83,9 +84,10 @@ export default function ExpenseTracker() {
   }
 
   function handleDownloadPdf() {
-    const filtered = expenses.filter(e => {
+    const safeExpenses = Array.isArray(expenses) ? expenses : [];
+    const filtered = safeExpenses.filter(e => {
       const d = e.date;
-      return (!startDate || d >= startDate) && (!endDate || d <= endDate);
+      return d && (!startDate || d >= startDate) && (!endDate || d <= endDate);
     });
     if (filtered.length === 0) return showToast('No data for this range', 'error');
     generatePdfReport(filtered, startDate, endDate);
@@ -93,9 +95,10 @@ export default function ExpenseTracker() {
   }
 
   function exportCSV() {
-    const filtered = expenses.filter(e => {
+    const safeExpenses = Array.isArray(expenses) ? expenses : [];
+    const filtered = safeExpenses.filter(e => {
       const d = e.date;
-      return (!startDate || d >= startDate) && (!endDate || d <= endDate);
+      return d && (!startDate || d >= startDate) && (!endDate || d <= endDate);
     });
     if (filtered.length === 0) return showToast('No data for this range', 'error');
 
@@ -116,8 +119,10 @@ export default function ExpenseTracker() {
   if (loading) return <div className="loading">Loading...</div>;
 
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const monthlyTotal = expenses
-    .filter(e => e.date.startsWith(currentMonth))
+  const safeExpenses = Array.isArray(expenses) ? expenses : [];
+  
+  const monthlyTotal = safeExpenses
+    .filter(e => e.date && e.date.startsWith(currentMonth))
     .reduce((s, e) => s + e.amount, 0);
 
   return (
@@ -139,6 +144,12 @@ export default function ExpenseTracker() {
         <div className="total">
           ₹{monthlyTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
         </div>
+      </div>
+
+      {/* Spending Trends */}
+      <div className="card" style={{ marginBottom: 24 }}>
+        <div className="section-title">📈 30-Day Spending Trend</div>
+        <TrendChart expenses={expenses} />
       </div>
 
       {/* Dashboard Grid */}

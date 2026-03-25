@@ -104,6 +104,34 @@ Keep it casual and specific. Use ₹ for currency.`;
   return await callGemini(prompt);
 }
 
+/**
+ * AI spending forecast based on current month's trend.
+ */
+export async function getSpendingForecast(expenses, budget) {
+  const now = new Date();
+  const currentMonth = now.toISOString().slice(0, 7);
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const dayOfMonth = now.getDate();
+
+  const monthExpenses = expenses.filter(e => e.date.startsWith(currentMonth));
+  const totalSoFar = monthExpenses.reduce((s, e) => s + e.amount, 0);
+  
+  const dailyAvg = totalSoFar / dayOfMonth;
+  const projectedTotal = Math.round(dailyAvg * daysInMonth);
+
+  const prompt = `You are a financial analyst. Provide a 1-sentence prediction for the end of the month based on this data:
+- Current date: Day ${dayOfMonth} of ${daysInMonth}
+- Monthly budget: ₹${budget}
+- Spent so far: ₹${totalSoFar}
+- Daily average: ₹${dailyAvg.toFixed(2)}
+- Projected end-of-month total: ₹${projectedTotal}
+
+If the projection is over budget, be firm but helpful. If under, be encouraging. Use ₹ for currency.`;
+
+  const advice = await callGemini(prompt);
+  return { projectedTotal, advice };
+}
+
 export function hasApiKey() {
   return !!API_KEY;
 }

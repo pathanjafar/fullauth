@@ -4,16 +4,18 @@ import { CATEGORIES } from '../../utils/expense/categories';
 export default function TransactionList({ expenses, onDelete }) {
   const [filterMonth, setFilterMonth] = useState('all');
 
+  const safeExpenses = Array.isArray(expenses) ? expenses : [];
+
   // Build unique month options
   const months = useMemo(() => {
-    const set = new Set(expenses.map(e => e.date ? e.date.slice(0, 7) : ''));
+    const set = new Set(safeExpenses.map(e => e.date ? e.date.slice(0, 7) : ''));
     return [...set].sort().reverse();
-  }, [expenses]);
+  }, [safeExpenses]);
 
   const filtered = useMemo(() => {
-    if (filterMonth === 'all') return expenses;
-    return expenses.filter(e => e.date && e.date.startsWith(filterMonth));
-  }, [expenses, filterMonth]);
+    if (filterMonth === 'all') return safeExpenses;
+    return safeExpenses.filter(e => e.date && e.date.startsWith(filterMonth));
+  }, [safeExpenses, filterMonth]);
 
   function formatDate(dateStr) {
     const d = new Date(dateStr + 'T00:00:00');

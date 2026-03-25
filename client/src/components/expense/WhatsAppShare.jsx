@@ -5,10 +5,11 @@ const WHATSAPP_NUMBER = '9182641412';
 export default function WhatsAppShare({ expenses, budget, startDate, endDate }) {
   function buildMessage() {
     const rangeLabel = startDate && endDate ? `${startDate} to ${endDate}` : 'Custom Range';
+    const safeExpenses = Array.isArray(expenses) ? expenses : [];
 
-    const filteredExpenses = expenses.filter(e => {
+    const filteredExpenses = safeExpenses.filter(e => {
       const d = e.date;
-      return (!startDate || d >= startDate) && (!endDate || d <= endDate);
+      return d && (!startDate || d >= startDate) && (!endDate || d <= endDate);
     });
 
     const total = filteredExpenses.reduce((s, e) => s + e.amount, 0);

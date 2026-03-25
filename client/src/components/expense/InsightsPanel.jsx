@@ -2,27 +2,28 @@ import { useMemo, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { CATEGORIES } from '../../utils/expense/categories';
-import { getSpendingAdvice, hasApiKey } from '../../utils/expense/ai';
+import { getSpendingAdvice, getSpendingForecast, hasApiKey } from '../../utils/expense/ai';
 
 ChartJS.register(ArcElement, Tooltip);
 
 export default function InsightsPanel({ expenses, budget, onBudgetChange }) {
   const currentMonth = new Date().toISOString().slice(0, 7);
+  const safeExpenses = Array.isArray(expenses) ? expenses : [];
 
   const monthSpent = useMemo(
-    () => expenses
-      .filter(e => e.date.startsWith(currentMonth))
+    () => safeExpenses
+      .filter(e => e.date && e.date.startsWith(currentMonth))
       .reduce((s, e) => s + e.amount, 0),
-    [expenses, currentMonth]
+    [safeExpenses, currentMonth]
   );
 
   const catTotals = useMemo(() => {
     const totals = {};
-    expenses.forEach(e => {
+    safeExpenses.forEach(e => {
       totals[e.category] = (totals[e.category] || 0) + e.amount;
     });
     return Object.entries(totals).sort((a, b) => b[1] - a[1]);
-  }, [expenses]);
+  }, [safeExpenses]);
 
   const totalAll = catTotals.reduce((s, [, v]) => s + v, 0) || 1;
 
@@ -117,9 +118,52 @@ export default function InsightsPanel({ expenses, budget, onBudgetChange }) {
             ✨ AI Financial Coach
           </h4>
           <AdviceButton expenses={expenses} budget={budget} />
+          <ForecastButton expenses={expenses} budget={budget} />
         </div>
       )}
     </>
+  );
+}
+
+function ForecastButton({ expenses, budget }) {
+  const [forecast, setForecast] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleGetForecast() {
+    setLoading(true);
+    try {
+      const res = await getSpendingForecast(expenses, budget);
+      setForecast(res);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div style={{ marginTop: 12, borderTop: '1px solid rgba(29, 158, 117, 0.1)', paddingTop: 12 }}>
+      {forecast && (
+        <div style={{ marginBottom: 12 }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: 2, fontWeight: 700, textTransform: 'uppercase' }}>Projected Month-End</div>
+          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: (forecast.projectedTotal > budget && budget > 0) ? 'var(--error)' : 'var(--primary)', marginBottom: 4 }}>
+            ₹{forecast.projectedTotal.toLocaleString('en-IN')}
+          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontStyle: 'italic', lineHeight: '1.4' }}>
+            "{forecast.advice}"
+          </p>
+        </div>
+      )}
+      <button 
+        type="button" 
+        className="btn btn-secondary" 
+        style={{ fontSize: '0.8rem', padding: '8px 12px', width: '100%', height: 'auto', background: 'white' }}
+        onClick={handleGetForecast}
+        disabled={loading}
+      >
+        {loading ? '🔮 Calculating Projection...' : forecast ? '🔄 Refresh Forecast' : '🔮 Forecast Month End'}
+      </button>
+    </div>
   );
 }
 
