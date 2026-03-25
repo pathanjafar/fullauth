@@ -13,8 +13,10 @@ app.use(cors());
 // Body parser
 app.use(express.json());
 
-// Set security headers
-app.use(helmet());
+// Set security headers (relaxed CSP for cross-origin API use)
+app.use(helmet({
+    contentSecurityPolicy: false
+}));
 
 // Rate limiting
 const limiter = rateLimit({
