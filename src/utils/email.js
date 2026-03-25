@@ -3,22 +3,36 @@ const nodemailer = require('nodemailer');
 let transporter = null;
 
 async function initTransporter() {
+    console.log('🔍 Checking Email Config:', {
+        USE_EMAIL: process.env.USE_EMAIL,
+        EMAIL_USER: process.env.EMAIL_USER ? '✅ set' : '❌ missing',
+        EMAIL_PASS: process.env.EMAIL_PASS ? '✅ set' : '❌ missing',
+        NODE_ENV: process.env.NODE_ENV
+    });
+
     if (
         process.env.USE_EMAIL === 'true' &&
         process.env.EMAIL_USER &&
         process.env.EMAIL_PASS
     ) {
-        transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-            port: Number(process.env.EMAIL_PORT) || 587,
-            secure: process.env.EMAIL_SECURE === 'true',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-        });
-        console.log(`📧 Email transport initialized for ${process.env.EMAIL_USER}`);
+        try {
+            transporter = nodemailer.createTransport({
+                host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+                port: Number(process.env.EMAIL_PORT) || 587,
+                secure: process.env.EMAIL_SECURE === 'true',
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS,
+                },
+            });
+            // Verify connection
+            await transporter.verify();
+            console.log(`📧 Email transport VERIFIED for ${process.env.EMAIL_USER}`);
+        } catch (err) {
+            console.error('📧 Email transport verification FAILED:', err.message);
+        }
     } else {
+        // Fallback or Ethereal
         const testAccount = nodemailer.createTestAccount ? await nodemailer.createTestAccount() : null;
         transporter = nodemailer.createTransport({
             host: 'smtp.ethereal.email',
