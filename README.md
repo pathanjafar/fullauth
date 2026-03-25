@@ -2,7 +2,7 @@
 
 A sophisticated, full-stack financial management ecosystem and authentication platform. This project combines a robust, secure authentication system with an AI-powered expense tracker, all wrapped in a **Dark Premium Obsidian** design system.
 
-![UI Preview](https://fullauth-six.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)](https://fullauth-six.vercel.app/)
 
 ## 🚀 Key Modules
 
