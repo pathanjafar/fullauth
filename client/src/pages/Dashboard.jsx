@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { API } from '../api/auth';
 
 export default function Dashboard() {
     const { user, logout } = useAuth();
@@ -17,10 +17,7 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchExpenseSummary = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const res = await axios.get('/api/expenses', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await API.get('/expenses');
                 
                 const currentMonth = new Date().toISOString().slice(0, 7);
                 const expenses = res.data?.data || [];
