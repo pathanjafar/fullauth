@@ -23,7 +23,11 @@ export default function Login() {
             login(token, meRes.data.data);
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+            if (err.code === 'ECONNABORTED') {
+                setError('Login timed out. Is the backend server running?');
+            } else {
+                setError(err.response?.data?.message || 'Login failed. Please check connectivity.');
+            }
         } finally {
             setLoading(false);
         }
