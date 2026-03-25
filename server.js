@@ -1,6 +1,7 @@
 require('dotenv').config();
-const app = require('./app');
-const connectDB = require('./config/db');
+// Point to the app in the src folder
+const app = require('./src/app');
+const connectDB = require('./src/config/db');
 
 // Connect to database
 connectDB();
