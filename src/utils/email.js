@@ -70,7 +70,18 @@ async function sendEmail({ to, subject, html }) {
         return result;
     } catch (err) {
         console.error('Email send error:', err.message);
+        throw err; // Rethrow to catch in controller
     }
 }
 
-module.exports = { sendEmail };
+async function verifyConnection() {
+    if (!transporter) return { success: false, message: 'Transporter not initialized' };
+    try {
+        await transporter.verify();
+        return { success: true, message: 'SMTP Connection Verified' };
+    } catch (err) {
+        return { success: false, message: err.message };
+    }
+}
+
+module.exports = { sendEmail, verifyConnection };
